@@ -1,7 +1,7 @@
 TODO
 ----
 
-- [ ] Make it a Git repo
+- [x] Make it a Git repo
 - [x] Automation with Invoke  
       http://pyinvoke.org
 - [ ] Deal with line ending format problem,  
