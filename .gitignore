@@ -1,0 +1,11 @@
+# PyInstaller
+/_build/
+/_dist/
+/*.spec
+
+# vim temp file
+*.swp
+
+# python
+.ropeproject/
+*.py[cod]
