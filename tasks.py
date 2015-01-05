@@ -46,7 +46,7 @@ def res():
 @task
 def ui():
     """compile user interface"""
-    run('pyuic4 -x -o "{}" "{}"'.format(ui_mod, ui_xml),
+    run('pyuic4 --from-imports --execute -o "{}" "{}"'.format(ui_mod, ui_xml),
         echo=True)
 
 
