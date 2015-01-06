@@ -51,6 +51,12 @@ def ui():
 
 
 @task
+def app():
+    """run the app"""
+    run('python {}'.format(app_file))
+
+
+@task
 def build():
     """build Windows executable with PyInstaller"""
     run(('pyinstaller --noconsole --onefile '
