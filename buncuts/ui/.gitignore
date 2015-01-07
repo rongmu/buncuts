@@ -1,2 +1,3 @@
+# exclude ui ralated modules since they should be automatically generated
 *.py
 !__init__.py
