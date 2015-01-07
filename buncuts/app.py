@@ -5,7 +5,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from PyQt4 import QtGui
 from PyQt4.QtCore import pyqtSlot
-from .ui import Ui_MainWindow
+from .ui.main import Ui_MainWindow
+from .ui.about import Ui_AboutDialog
 
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
