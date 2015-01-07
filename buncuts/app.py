@@ -8,6 +8,11 @@ from PyQt4.QtCore import pyqtSlot
 from .ui.main import Ui_MainWindow
 from .ui.about import Ui_AboutDialog
 
+class AboutDialog(QtGui.QDialog, Ui_AboutDialog):
+    def __init__(self):
+        QtGui.QDialog.__init__(self)
+        self.setupUi(self)
+
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
