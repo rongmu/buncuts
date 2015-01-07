@@ -3,30 +3,32 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
-import os.path as p
+import os.path
+import glob
 from invoke import task, run
 
-base_path = p.dirname(p.realpath(__file__))
+base_path = os.path.dirname(os.path.realpath(__file__))
 
 # PyInstaller
 exe_name = 'BunCuts'
 
-app_file = p.join(base_path, 'app.pyw')
-app_icon = p.join(base_path, 'app.ico')
+app_file = os.path.join(base_path, 'app.pyw')
+app_icon = os.path.join(base_path, 'app.ico')
 
 spec_path = base_path
-work_path = p.join(base_path, '_build')
-dist_path = p.join(base_path, '_dist')
+work_path = os.path.join(base_path, '_build')
+dist_path = os.path.join(base_path, '_dist')
 
 # pyrcc & pyuic
-pkg_dir = p.join(base_path, 'buncuts')
-res_dir = p.join(pkg_dir, 'res')
+pkg_dir = os.path.join(base_path, 'buncuts')
+res_dir = os.path.join(pkg_dir, 'res')
 
-res_qrc = p.join(res_dir, 'app.qrc')
-res_mod = p.join(pkg_dir, 'app_rc.py')
+res_name = "app"
+res_qrc = os.path.join(res_dir, res_name + '.qrc')
+ui_glob = os.path.join(res_dir, os.path.normpath('ui/*.ui'))
 
-ui_xml = p.join(res_dir, p.normpath('ui/app.ui'))
-ui_mod = p.join(pkg_dir, 'ui.py')
+ui_pkg = os.path.join(pkg_dir, 'ui')
+res_mod = os.path.join(ui_pkg, res_name + '_rc.py')
 
 
 @task
@@ -46,8 +48,13 @@ def res():
 @task
 def ui():
     """compile user interface"""
-    run('pyuic4 --from-imports --execute -o "{}" "{}"'.format(ui_mod, ui_xml),
-        echo=True)
+    for ui_xml in glob.glob(ui_glob):
+        name_noext = os.path.splitext(os.path.basename(ui_xml))[0]
+        ui_mod = os.path.join(ui_pkg, name_noext + '.py')
+
+        run('pyuic4 --from-imports -o "{}" "{}"'.format(
+            ui_mod, ui_xml),
+            echo=True)
 
 
 @task
