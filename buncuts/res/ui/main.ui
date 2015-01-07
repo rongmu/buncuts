@@ -144,7 +144,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>変換</string>
+     <string>処理</string>
     </property>
    </widget>
   </widget>
