@@ -40,14 +40,14 @@ def test():
 
 @task
 def res():
-    """compile resources"""
+    """compile resources to ui subpackage"""
     run('pyrcc4 -py2 -o "{}" "{}"'.format(res_mod, res_qrc),
         echo=True)
 
 
 @task
 def ui():
-    """compile user interface"""
+    """compile user interface to ui subpackage"""
     for ui_xml in glob.glob(ui_glob):
         name_noext = os.path.splitext(os.path.basename(ui_xml))[0]
         ui_mod = os.path.join(ui_pkg, name_noext + '.py')
