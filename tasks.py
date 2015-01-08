@@ -8,27 +8,25 @@ import glob
 from invoke import task, run
 
 base_path = os.path.dirname(os.path.realpath(__file__))
+pkg_dir = os.path.join(base_path, 'buncuts')
+res_dir = os.path.join(pkg_dir, 'res')
+ui_pkg = os.path.join(pkg_dir, 'ui')
 
 # PyInstaller
 exe_name = 'BunCuts'
 
 app_file = os.path.join(base_path, 'app.pyw')
-app_icon = os.path.join(base_path, 'app.ico')
+app_icon = os.path.join(res_dir, os.path.normpath('img/app.ico'))
 
 spec_path = base_path
 work_path = os.path.join(base_path, '_build')
 dist_path = os.path.join(base_path, '_dist')
 
 # pyrcc & pyuic
-pkg_dir = os.path.join(base_path, 'buncuts')
-res_dir = os.path.join(pkg_dir, 'res')
-
 res_name = "app"
 res_qrc = os.path.join(res_dir, res_name + '.qrc')
-ui_glob = os.path.join(res_dir, os.path.normpath('ui/*.ui'))
-
-ui_pkg = os.path.join(pkg_dir, 'ui')
 res_mod = os.path.join(ui_pkg, res_name + '_rc.py')
+ui_glob = os.path.join(res_dir, os.path.normpath('ui/*.ui'))
 
 
 @task

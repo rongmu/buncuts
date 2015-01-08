@@ -1,11 +1,11 @@
 TODO
 ----
-
+- [ ] Deal with line ending format problem,  
+      this time it should be Windows first.
+- [x] Move app.ico to res/img
 - [x] Make it a Git repo
 - [x] Automation with Invoke  
       http://pyinvoke.org
-- [ ] Deal with line ending format problem,  
-      this time it should be Windows first.
 
 ## Qt
 
