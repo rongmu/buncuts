@@ -1,4 +1,4 @@
 # coding: utf-8
-from . import app
-
-app.main()
+if __name__ == '__main__':
+    from . import app
+    app.main()
