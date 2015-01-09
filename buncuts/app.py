@@ -4,14 +4,20 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4.QtCore import pyqtSlot
 from .ui.main import Ui_MainWindow
 from .ui.about import Ui_AboutDialog
 
+
 class AboutDialog(QtGui.QDialog, Ui_AboutDialog):
-    def __init__(self):
-        QtGui.QDialog.__init__(self)
+    def __init__(self, parent=None, flags=0):
+        QtGui.QDialog.__init__(self, parent, flags)
         self.setupUi(self)
+
+    @pyqtSlot()
+    def on_buttonBox_accepted(self):
+        self.accept()
 
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
@@ -22,6 +28,16 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_actionExit_triggered(self):
         QtGui.qApp.quit()
+
+    @pyqtSlot()
+    def on_actionAbout_triggered(self):
+        if not hasattr(self, 'about_dialog'):
+            # create the about dialog for the first time
+            flagNoHelp = (QtCore.Qt.WindowSystemMenuHint |
+                          QtCore.Qt.WindowTitleHint)
+            self.dialogAbout = AboutDialog(parent=self, flags=flagNoHelp)
+
+        self.dialogAbout.open()
 
     @pyqtSlot()
     def on_btnBrowseInput_clicked(self):
