@@ -58,7 +58,8 @@ def ui():
 @task
 def app():
     """run the app"""
-    run('python {}'.format(app_file))
+    run('python {}'.format(app_file),
+        echo=True)
 
 
 @task
