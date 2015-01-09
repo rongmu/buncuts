@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>img/icon.64.png</file>
     <file>img/icon.256.png</file>
 </qresource>
 </RCC>
