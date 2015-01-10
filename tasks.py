@@ -65,7 +65,7 @@ def app():
 @task
 def build():
     """build Windows executable with PyInstaller"""
-    run(('pyinstaller --noconsole --onefile '
+    run(('pyinstaller --noconsole '
          '--specpath="{spec}" --workpath="{work}" --distpath="{dist}" '
          '--name={name} --icon="{icon}" "{script}"').format(
              spec=spec_path, work=work_path, dist=dist_path,
