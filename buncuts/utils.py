@@ -19,6 +19,7 @@ def split_into_sentences(text=sys.stdin, sentence_delim=default_delimeter,
                          echo=False):
     # TODO: implement the echo and limit option.
     # TODO: implement encoding option.
+    # TODO: implement chunk_size option.
 
     count = 0
 
