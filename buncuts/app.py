@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
 
+from . import utils
 from .ui.main import Ui_MainWindow
 from .ui.about import Ui_AboutDialog
 
@@ -45,6 +46,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def on_btnBrowseOutput_clicked(self):
         folder = QtGui.QFileDialog.getExistingDirectory(self, "フォルダを開く")
         self.lineOutput.setText(folder)
+
+    @pyqtSlot()
+    def on_btnExecute_clicked(self):
+        utils.split_into_sentences(text=unicode(self.lineInput.text()),
+                                   output=unicode(self.lineOutput.text()),
+                                   is_dir=True)
 
 
 def main():
