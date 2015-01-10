@@ -3,9 +3,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
-from PyQt4 import QtGui
-from PyQt4 import QtCore
+
+from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
+
 from .ui.main import Ui_MainWindow
 from .ui.about import Ui_AboutDialog
 
