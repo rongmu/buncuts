@@ -31,13 +31,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_actionAbout_triggered(self):
-        if not hasattr(self, 'about_dialog'):
-            # create the about dialog for the first time
-            flagNoHelp = (QtCore.Qt.WindowSystemMenuHint |
-                          QtCore.Qt.WindowTitleHint)
-            self.dialogAbout = AboutDialog(parent=self, flags=flagNoHelp)
-
-        self.dialogAbout.open()
+        flagNoHelp = (QtCore.Qt.WindowSystemMenuHint |
+                      QtCore.Qt.WindowTitleHint)
+        AboutDialog(parent=self, flags=flagNoHelp).exec_()
 
     @pyqtSlot()
     def on_btnBrowseInput_clicked(self):
