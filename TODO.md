@@ -3,6 +3,8 @@ TODO
 - [ ] Allow user to specify the input/output encodings
 - [ ] Deal with line ending format problem,  
       this time it should be Windows first.
+- [ ] Consider using inno setup to install your app  
+      - http://www.jrsoftware.org/isinfo.php
 
 ## Qt
 - [ ] Implement progress indicator. eg. ProgressBar.
