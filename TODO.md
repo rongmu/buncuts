@@ -1,5 +1,6 @@
 TODO
 ----
+- [ ] Allow user to specify the input/output encodings
 - [ ] Deal with line ending format problem,  
       this time it should be Windows first.
 
