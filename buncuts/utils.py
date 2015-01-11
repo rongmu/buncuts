@@ -78,15 +78,14 @@ def chunk_splitter(chunk,
     result = ""
     count = 0
 
-    length = len(chunk)
-
     outside_quote = True
     quote_chars = quote_dict.keys()
     current_quote = ""
     current_close_quote = ""
 
-    for i in xrange(length):
-        char = chunk[i]
+    length = len(chunk)
+
+    for i, char in enumerate(chunk):
         result = ''.join((result, char))  # append char to the result
 
         # TODO: Should use a FILO to avoid multiple embeded quotations.
