@@ -4,6 +4,10 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+# select PyQt API v2
+import sip
+sip.setapi('QString', 2)
+
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
 
@@ -40,7 +44,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_btnBrowseInput_clicked(self):
         files = QtGui.QFileDialog.getOpenFileNames(self, "ファイルを開く")
-        self.lineInput.setText(files.join(";"))
+        self.lineInput.setText(";".join(files))
 
     @pyqtSlot()
     def on_btnBrowseOutput_clicked(self):
@@ -49,8 +53,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_btnExecute_clicked(self):
-        utils.split_into_sentences(text=unicode(self.lineInput.text()),
-                                   output=unicode(self.lineOutput.text()),
+        utils.split_into_sentences(text=self.lineInput.text(),
+                                   output=self.lineOutput.text(),
                                    is_dir=True)
 
 
