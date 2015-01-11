@@ -22,6 +22,9 @@ spec_path = base_path
 work_path = os.path.join(base_path, '_build')
 dist_path = os.path.join(base_path, '_dist')
 
+clean_paths = (work_path, dist_path,
+               os.path.join(spec_path, '{}.spec'.format(exe_name)))
+
 # pyrcc & pyuic
 res_name = "app"
 res_qrc = os.path.join(res_dir, res_name + '.qrc')
@@ -71,3 +74,10 @@ def build():
              spec=spec_path, work=work_path, dist=dist_path,
              name=exe_name, icon=app_icon, script=app_file),
         echo=True)
+
+@task
+def clean():
+    """clean the build files of PyInstaller"""
+    for path in clean_paths:
+        run('rm -rf "{}"'.format(path),
+            echo=True)
