@@ -12,10 +12,13 @@ default_delimeter = "。！？▲"
 default_quote_dict = {"「": "」", "『": "』"}
 
 
-def split_into_sentences(text=sys.stdin, sentence_delim=default_delimeter,
+def split_into_sentences(text=sys.stdin,
+                         sentence_delim=default_delimeter,
                          quote_dict=default_quote_dict,
-                         output=sys.stdout, append=False,
-                         is_dir=False, limit=float('inf'),
+                         output=sys.stdout,
+                         append=False,
+                         is_dir=False,
+                         limit=float('inf'),
                          echo=False):
     # TODO: implement the echo and limit option.
     # TODO: implement encoding option.
