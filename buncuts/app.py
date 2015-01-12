@@ -15,6 +15,9 @@ from . import utils
 from .ui.main import Ui_MainWindow
 from .ui.about import Ui_AboutDialog
 
+# delimeter for multiple paths
+path_delimeter = ";"
+
 
 class AboutDialog(QtGui.QDialog, Ui_AboutDialog):
     def __init__(self, parent=None, flags=0):
@@ -44,7 +47,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_btnBrowseInput_clicked(self):
         files = QtGui.QFileDialog.getOpenFileNames(self, "ファイルを開く")
-        self.lineInput.setText(";".join(files))
+        self.lineInput.setText(path_delimeter.join(files))
 
     @pyqtSlot()
     def on_btnBrowseOutput_clicked(self):
@@ -53,9 +56,14 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_btnExecute_clicked(self):
-        utils.split_into_sentences(text=self.lineInput.text(),
-                                   output=self.lineOutput.text(),
-                                   is_dir=True)
+        self.processLineBreaks()
+
+    def processLineBreaks(self):
+        paths = self.lineInput.text().split(path_delimeter)
+
+        utils.split_sentences(input_list=paths,
+                              output=self.lineOutput.text(),
+                              is_dir=True)
 
 
 def main():

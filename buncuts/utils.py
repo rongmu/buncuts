@@ -8,43 +8,83 @@ import sys
 import codecs
 import re
 
-default_delimeter = "。！？▲"
+default_delimeter = list("。！？▲")
 default_quote_dict = {"「": "」", "『": "』"}
 
 
-def split_into_sentences(text=sys.stdin,
-                         sentence_delim=default_delimeter,
-                         quote_dict=default_quote_dict,
-                         output=sys.stdout,
-                         append=False,
-                         is_dir=False,
-                         limit=float('inf'),
-                         echo=False):
-    count = 0
+def split_sentences(input_list,
+                    input_enc='sjis',
+                    output=sys.stdout,
+                    output_enc='sjis',
+                    append=False,
+                    is_dir=False,
+                    sentence_delim=default_delimeter,
+                    quote_dict=default_quote_dict,
+                    limit=float('inf'),
+                    echo=False):
+    """Split the text from input files into sentences.
 
-    # create a list from chars in a string
-    sentence_delim = list(sentence_delim)
+    Args:
+        input_list: A list of paths of input files.
+        input_enc: Character encoding of the input files.
+            Defauts to Shift-JIS.
+        output: Path of output destination.
+            Defauts to stdout.
+        output_enc: Character encoding of the output file(s).
+            Defauts to Shift-JIS.
+        append: Whether append to output or not.
+        is_dir: Whether the output is a directory or a regular file.
+        sentence_delim: A list of sentence delimeters.
+        quote_dict: A dict that maps opening quote marks
+            to its closing counterpart.
+        limit: The limit for maximum amout of sentences
+            that should be extracted.
+        echo: Whether echo the output or not.
+    """
+    for f in input_list:
+        process_single_file(input=f,
+                            output=output,
+                            append=append,
+                            is_dir=is_dir,
+                            sentence_delim=sentence_delim,
+                            quote_dict=quote_dict,
+                            limit=limit,
+                            echo=echo)
+
+
+def process_single_file(input=sys.stdin,
+                        input_enc='sjis',
+                        output=sys.stdout,
+                        output_enc='sjis',
+                        append=False,
+                        is_dir=False,
+                        sentence_delim=default_delimeter,
+                        quote_dict=default_quote_dict,
+                        limit=float('inf'),
+                        echo=False):
+    """Perform line breaks on one file."""
+    count = 0
 
     if append:
         mode = 'a'
     else:
         mode = 'w'
 
-    if text is not sys.stdin:
-        text_file = codecs.open(text, 'r', 'sjis')
+    if input is not sys.stdin:
+        input_file = codecs.open(input, 'r', input_enc)
     else:
-        text_file = text
+        input_file = input
 
     if output is not sys.stdout:
         if is_dir:
-            path = os.path.join(output, os.path.basename(text))
-            output_file = codecs.open(path, mode, 'sjis')
+            path = os.path.join(output, os.path.basename(input))
+            output_file = codecs.open(path, mode, output_enc)
         else:
-            output_file = codecs.open(output, mode, 'sjis')
+            output_file = codecs.open(output, mode, output_enc)
     else:
         output_file = output
 
-    for line in text_file:
+    for line in input_file:
         count += 1
 
         # strip half/full width spaces
@@ -52,26 +92,28 @@ def split_into_sentences(text=sys.stdin,
         # use re instead.
         line = re.sub(r"^[ 　\n]+|[ 　]+$", "", line)
 
-        line_splitted, count_added = chunk_splitter(line,
-                                                    sentence_delim, quote_dict)
+        line_splitted, count_added = split_chunk(line,
+                                                 sentence_delim, quote_dict)
 
         output_file.write(line_splitted)
         count += count_added
 
     # close files
-    if text is not sys.stdin:
-        text_file.close()
+    if input is not sys.stdin:
+        input_file.close()
 
     if output is not sys.stdout:
         output_file.close()
 
 
-def chunk_splitter(chunk,
-                   sentence_delim=default_delimeter,
-                   quote_dict=default_quote_dict):
-    """Chunk splitter.
-    Reads in a chunk, returns the splitted string and a count as a tuple:
-    (result, count)
+def split_chunk(chunk,
+                sentence_delim=default_delimeter,
+                quote_dict=default_quote_dict):
+    """Split a chunk.
+
+    Returns:
+        A tuple that contains the splitted string and the count of
+        sentence delimeters in the chunk: (result, count)
     """
     result = ""
     count = 0
