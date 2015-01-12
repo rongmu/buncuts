@@ -20,10 +20,6 @@ def split_into_sentences(text=sys.stdin,
                          is_dir=False,
                          limit=float('inf'),
                          echo=False):
-    # TODO: implement the echo and limit option.
-    # TODO: implement encoding option.
-    # TODO: implement chunk_size option.
-
     count = 0
 
     # create a list from chars in a string
@@ -49,7 +45,6 @@ def split_into_sentences(text=sys.stdin,
         output_file = output
 
     for line in text_file:
-        # [todo] - skip empty line.
         count += 1
 
         # strip half/full width spaces
@@ -91,7 +86,6 @@ def chunk_splitter(chunk,
     for i, char in enumerate(chunk):
         result = ''.join((result, char))  # append char to the result
 
-        # TODO: Should use a FILO to avoid multiple embeded quotations.
         if outside_quote:
             if char in quote_chars:
                 outside_quote = False
