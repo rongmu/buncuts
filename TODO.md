@@ -14,12 +14,11 @@ TODO
       http://qt-project.org/wiki/Progress-bar
 
 ## buncuts.utils
-### split_into_sentences()
+### process_single_file()
 
-- skip empty line.
-- implement the echo and limit option.
-- implement chunk_size option.
+- skip empty lines.
+- [delayed] implement the echo and limit option.
 
-### chunk_splitter()
+### split_chunk()
 
 - Should use a FILO to avoid multiple embeded quotations.
