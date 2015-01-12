@@ -112,6 +112,7 @@ def process_single_file(input=sys.stdin,
 
 def split_chunk(chunk,
                 sentence_delim=default_delimeter,
+                check_quote=True,
                 quote_dict=default_quote_dict):
     """Split a chunk.
 
@@ -121,33 +122,42 @@ def split_chunk(chunk,
     """
     result = ""
     count = 0
+    length = len(chunk)
 
     outside_quote = True
     quote_chars = quote_dict.keys()
     current_quote = ""
     current_close_quote = ""
 
-    length = len(chunk)
-
     for i, char in enumerate(chunk):
-        result = ''.join((result, char))  # append char to the result
+        # Always append original char to the result.
+        result = ''.join((result, char))
 
-        if outside_quote:
-            if char in quote_chars:
-                outside_quote = False
-                current_quote = char
-                current_close_quote = quote_dict[current_quote]
+        # If quotation check is required,
+        # do sentence delimeter examination only when current character
+        # is outside quotation and is not a quotation mark itself.
+        # Otherwise continue to the next iteration.
+        if check_quote:
+            if outside_quote:
+                if char in quote_chars:
+                    outside_quote = False
+                    current_quote = char
+                    current_close_quote = quote_dict[current_quote]
+                    continue
+                else:
+                    pass
+            else:
+                if char == current_close_quote:
+                    outside_quote = True
+                continue
 
-            elif char in sentence_delim:
-                count += 1
+        # Additionaly, append a newline after a sentence delimeter.
+        if char in sentence_delim:
+            count += 1
 
-                # add a newline after a sentence delimeter.
-                if i < length - 1 and chunk[i+1] != '\n':
-                    result = ''.join((result, '\n'))
-                elif i == length - 1:
-                    result = ''.join((result, '\n'))
-
-        elif char == current_close_quote:
-            outside_quote = True
+            if i < length - 1 and chunk[i+1] != '\n':
+                result = ''.join((result, '\n'))
+            elif i == length - 1:
+                result = ''.join((result, '\n'))
 
     return result, count
