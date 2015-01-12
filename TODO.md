@@ -1,11 +1,11 @@
 TODO
 ====
 
-- [ ] Allow user to specify the input/output encodings
 - [ ] Deal with line ending format problem,  
       this time it should be Windows first.
 - [ ] Consider using inno setup to install your app  
       - http://www.jrsoftware.org/isinfo.php
+- [x] Allow user to specify the input/output encodings
 
 ## Qt
 
@@ -16,10 +16,9 @@ TODO
 ## buncuts.utils
 ### split_into_sentences()
 
-- implement the echo and limit option.
-- implement encoding option.
-- implement chunk_size option.
 - skip empty line.
+- implement the echo and limit option.
+- implement chunk_size option.
 
 ### chunk_splitter()
 
