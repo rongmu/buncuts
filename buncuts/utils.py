@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
+
 import os
 import sys
 import codecs
@@ -62,7 +63,10 @@ def process_single_file(input=sys.stdin,
                         quote_dict=default_quote_dict,
                         limit=float('inf'),
                         echo=False):
-    """Perform line breaks on one file."""
+    """Perform line breaks on one file.
+
+    Will call split_chunk() for each line in the input file.
+    """
     count = 0
 
     if append:
