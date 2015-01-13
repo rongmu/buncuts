@@ -89,8 +89,6 @@ def process_single_file(input=sys.stdin,
         output_file = output
 
     for line in input_file:
-        count += 1
-
         # strip half/full width spaces
         # strip() somehow don't work very well.
         # use re instead.
