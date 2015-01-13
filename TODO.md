@@ -21,6 +21,8 @@ TODO
         Check if the line is enclosed in quotation.
         If it's true, strip the first and last quotation marks,
         pass the line again to the `split_chunk()`with `check_quote=False`.
+- [ ] Also implent a simple quote checking method that only do one-level check?
+- [x] Should use a FILO to avoid multiple embeded quotations.
 - [x] Allow user to specify output line ending format in API.
       In GUI, no option for this, just keep the original format.  
 - [x] Allow user to specify the input/output encodings
@@ -32,4 +34,3 @@ TODO
 
 ### split_chunk()
 
-- [ ] Should use a FILO to avoid multiple embeded quotations.
