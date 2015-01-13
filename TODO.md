@@ -13,7 +13,7 @@ TODO
 ## buncuts.utils
 
 - [ ] Allow user to specify output line ending format.
-- [ ] Strip the quotation marks of lines that are  
+- [ ] Strip the quotation marks of lines that are
       totally enclosed in quotation.
   - [ ] `split_chunk()`:  
         Return a list of lines instead of a string.
@@ -26,8 +26,8 @@ TODO
 
 ### process_single_file()
 
+- [ ] #delayed implement the echo and limit option.
 - [x] skip empty lines.
-- [ ] (delayed) implement the echo and limit option.
 
 ### split_chunk()
 
