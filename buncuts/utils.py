@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 
 import os
 import sys
-import codecs
+import io
 import re
 
 default_delimeter = list("。！？▲")
@@ -25,22 +25,7 @@ def split_sentences(input_list,
                     echo=False):
     """Split the text from input files into sentences.
 
-    Args:
-        input_list: A list of paths of input files.
-        input_enc: Character encoding of the input files.
-            Defauts to Shift-JIS.
-        output: Path of output destination.
-            Defauts to stdout.
-        output_enc: Character encoding of the output file(s).
-            Defauts to Shift-JIS.
-        append: Whether append to output or not.
-        is_dir: Whether the output is a directory or a regular file.
-        sentence_delim: A list of sentence delimeters.
-        quote_dict: A dict that maps opening quote marks
-            to its closing counterpart.
-        limit: The limit for maximum amout of sentences
-            that should be extracted.
-        echo: Whether echo the output or not.
+    Call ``process_single_file()`` for each file in the input file list.
     """
     for f in input_list:
         process_single_file(input=f,
@@ -57,6 +42,7 @@ def process_single_file(input=sys.stdin,
                         input_enc='sjis',
                         output=sys.stdout,
                         output_enc='sjis',
+                        output_newline=None,
                         append=False,
                         is_dir=False,
                         sentence_delim=default_delimeter,
@@ -65,7 +51,25 @@ def process_single_file(input=sys.stdin,
                         echo=False):
     """Perform line breaks on one file.
 
-    Will call split_chunk() for each line in the input file.
+    Call ``split_chunk()`` for each line in the input file.
+
+    Args:
+        input_list: A list of paths of input files.
+        input_enc: Character encoding of the input files.
+            Defauts to Shift-JIS.
+        output: Path of output destination.
+            Defauts to stdout.
+        output_enc: Character encoding of the output file(s).
+            Defauts to Shift-JIS.
+        output_newline: The newline formart of the output file(s).
+        append: Whether append to output or not.
+        is_dir: Whether the output is a directory or a regular file.
+        sentence_delim: A list of sentence delimeters.
+        quote_dict: A dict that maps opening quote marks
+            to its closing counterpart.
+        limit: The limit for maximum amout of sentences
+            that should be extracted.
+        echo: Whether echo the output or not.
     """
     count = 0
 
@@ -75,16 +79,35 @@ def process_single_file(input=sys.stdin,
         mode = 'w'
 
     if input is not sys.stdin:
-        input_file = codecs.open(input, 'r', input_enc)
+        input_file = io.open(input,
+                             mode='r',
+                             encoding=input_enc)
+
     else:
         input_file = input
+
+    # determine the newline format.
+    # io.TextIOBase.newlines only indicates the newlines translated so far.
+    # so you have to read one line in order to determine the newline.
+    input_file.readline()
+    input_newline = input_file.newlines
+    input_file.seek(0)
+    if output_newline is None:
+        output_newline = input_newline
 
     if output is not sys.stdout:
         if is_dir:
             path = os.path.join(output, os.path.basename(input))
-            output_file = codecs.open(path, mode, output_enc)
+            output_file = io.open(path,
+                                  mode=mode,
+                                  encoding=output_enc,
+                                  newline=output_newline)
+
         else:
-            output_file = codecs.open(output, mode, output_enc)
+            output_file = io.open(output,
+                                  mode=mode,
+                                  encoding=output_enc,
+                                  newline=output_newline)
     else:
         output_file = output
 
