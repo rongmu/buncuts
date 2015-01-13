@@ -3,7 +3,6 @@ TODO
 
 - [ ] Consider using inno setup to install your app  
       - http://www.jrsoftware.org/isinfo.php
-- [x] Allow user to specify the input/output encodings
 
 ## Qt
 
@@ -14,11 +13,21 @@ TODO
 ## buncuts.utils
 
 - [ ] Allow user to specify output line ending format.
+- [ ] Strip the quotation marks of lines that are  
+      totally enclosed in quotation.
+  - [ ] `split_chunk()`:  
+        Return a list of lines instead of a string.
+        Tuple and count no longer needed.
+  - [ ] `process_single_file()`:  
+        Check if the line is enclosed in quotation.
+        If it's true, strip the first and last quotation marks,
+        pass the line again to the `split_chunk()`.
+- [x] Allow user to specify the input/output encodings
 
 ### process_single_file()
 
-- [x]skip empty lines.
-- [delayed] implement the echo and limit option.
+- [x] skip empty lines.
+- [ ] (delayed) implement the echo and limit option.
 
 ### split_chunk()
 
