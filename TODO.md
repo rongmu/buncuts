@@ -16,9 +16,9 @@ TODO
 ## buncuts.utils
 ### process_single_file()
 
-- skip empty lines.
+- [x]skip empty lines.
 - [delayed] implement the echo and limit option.
 
 ### split_chunk()
 
-- Should use a FILO to avoid multiple embeded quotations.
+- [ ] Should use a FILO to avoid multiple embeded quotations.

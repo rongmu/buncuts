@@ -94,10 +94,14 @@ def process_single_file(input=sys.stdin,
         # strip half/full width spaces
         # strip() somehow don't work very well.
         # use re instead.
-        line = re.sub(r"^[ 　\n]+|[ 　]+$", "", line)
+        line = re.sub(r"^[ 　]+|[ 　]+$", "", line)
+
+        if line == '\n':
+            continue
 
         line_splitted, count_added = split_chunk(line,
-                                                 sentence_delim, quote_dict)
+                                                 sentence_delim,
+                                                 quote_dict)
 
         output_file.write(line_splitted)
         count += count_added
