@@ -13,29 +13,68 @@ default_delimeter = list("。！？▲")
 default_quote_dict = {"「": "」", "『": "』"}
 
 
-def split_sentences(input_list,
-                    input_enc='sjis',
-                    output=sys.stdout,
-                    output_enc='sjis',
-                    append=False,
-                    is_dir=False,
-                    sentence_delim=default_delimeter,
-                    quote_dict=default_quote_dict,
-                    limit=float('inf'),
-                    echo=False):
-    """Split the text from input files into sentences.
+class QuoteChecker:
+    """Quote checker.
 
-    Call ``process_single_file()`` for each file in the input file list.
+    The instance is expected to be used in an iteration,
+    to check whether a character is inside a (nested) quotatoin
+    in a sequence of text.
     """
-    for f in input_list:
-        process_single_file(input=f,
-                            output=output,
-                            append=append,
-                            is_dir=is_dir,
-                            sentence_delim=sentence_delim,
-                            quote_dict=quote_dict,
-                            limit=limit,
-                            echo=echo)
+    def __init__(self, quote_dict):
+        self.quote_dict = quote_dict
+        self.open_quotes = quote_dict.keys()
+        self.quotes_remained = []
+
+    def outside_quote(self, char):
+        if char in self.open_quotes:
+            close_quote = self.quote_dict[char]
+            self.quotes_remained.append(close_quote)
+
+        if len(self.quotes_remained) == 0:
+            return True
+        else:
+            if char == self.quotes_remained[-1]:
+                self.quotes_remained.pop()
+            return False
+
+
+def split_chunk(chunk,
+                sentence_delim=default_delimeter,
+                check_quote=True,
+                quote_dict=default_quote_dict):
+    """Split a chunk.
+
+    Notice that lines are terminated with UNIX ``\n``.
+
+    Returns:
+        A tuple that contains the splitted string and the count of
+        sentence delimeters in the chunk: (result, count)
+    """
+    result = ""
+    count = 0
+    length = len(chunk)
+    qc = QuoteChecker(quote_dict)
+
+    for i, char in enumerate(chunk):
+        # Always append original char to the result.
+        result = ''.join((result, char))
+
+        if check_quote:
+            if qc.outside_quote(char):
+                pass
+            else:
+                continue
+
+        # Additionaly, append a newline after a sentence delimeter.
+        if char in sentence_delim:
+            count += 1
+
+            if i < length - 1 and chunk[i+1] != '\n':
+                result = ''.join((result, '\n'))
+            elif i == length - 1:
+                result = ''.join((result, '\n'))
+
+    return result, count
 
 
 def process_single_file(input=sys.stdin,
@@ -135,56 +174,26 @@ def process_single_file(input=sys.stdin,
         output_file.close()
 
 
-def split_chunk(chunk,
-                sentence_delim=default_delimeter,
-                check_quote=True,
-                quote_dict=default_quote_dict):
-    """Split a chunk.
+def split_sentences(input_list,
+                    input_enc='sjis',
+                    output=sys.stdout,
+                    output_enc='sjis',
+                    append=False,
+                    is_dir=False,
+                    sentence_delim=default_delimeter,
+                    quote_dict=default_quote_dict,
+                    limit=float('inf'),
+                    echo=False):
+    """Split the text from input files into sentences.
 
-    Notice that lines are terminated with UNIX ``\n``.
-
-    Returns:
-        A tuple that contains the splitted string and the count of
-        sentence delimeters in the chunk: (result, count)
+    Call ``process_single_file()`` for each file in the input file list.
     """
-    result = ""
-    count = 0
-    length = len(chunk)
-
-    outside_quote = True
-    quote_chars = quote_dict.keys()
-    current_quote = ""
-    current_close_quote = ""
-
-    for i, char in enumerate(chunk):
-        # Always append original char to the result.
-        result = ''.join((result, char))
-
-        # If quotation check is required,
-        # do sentence delimeter examination only when current character
-        # is outside quotation and is not a quotation mark itself.
-        # Otherwise continue to the next iteration.
-        if check_quote:
-            if outside_quote:
-                if char in quote_chars:
-                    outside_quote = False
-                    current_quote = char
-                    current_close_quote = quote_dict[current_quote]
-                    continue
-                else:
-                    pass
-            else:
-                if char == current_close_quote:
-                    outside_quote = True
-                continue
-
-        # Additionaly, append a newline after a sentence delimeter.
-        if char in sentence_delim:
-            count += 1
-
-            if i < length - 1 and chunk[i+1] != '\n':
-                result = ''.join((result, '\n'))
-            elif i == length - 1:
-                result = ''.join((result, '\n'))
-
-    return result, count
+    for f in input_list:
+        process_single_file(input=f,
+                            output=output,
+                            append=append,
+                            is_dir=is_dir,
+                            sentence_delim=sentence_delim,
+                            quote_dict=quote_dict,
+                            limit=limit,
+                            echo=echo)
