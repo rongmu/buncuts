@@ -12,7 +12,13 @@ TODO
 
 ## buncuts.utils
 
-- [ ] Allow user to specify output line ending format.
+- [ ] Allow user to specify output line ending format in API.
+      In GUI, no option for this, just keep the original format.
+  - [ ] `process_single_file()`:  
+        Translate line endings in the file to `\n`
+        before passing it to `split_chunk()`.  
+        Also, translate the newline back to the format the original file uses,
+        before writing to the output.
 - [ ] Strip the quotation marks of lines that are
       totally enclosed in quotation.
   - [ ] `split_chunk()`:  
@@ -26,7 +32,7 @@ TODO
 
 ### process_single_file()
 
-- [ ] #delayed implement the echo and limit option.
+- [ ] _delayed_ implement the echo and limit option.
 - [x] skip empty lines.
 
 ### split_chunk()
