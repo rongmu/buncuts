@@ -54,7 +54,7 @@ def process_single_file(input=sys.stdin,
     Call ``split_chunk()`` for each line in the input file.
 
     Args:
-        input_list: A list of paths of input files.
+        input: Path of the input file.
         input_enc: Character encoding of the input files.
             Defauts to Shift-JIS.
         output: Path of output destination.
