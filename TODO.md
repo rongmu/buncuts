@@ -1,8 +1,6 @@
 TODO
 ====
 
-- [ ] Deal with line ending format problem,  
-      this time it should be Windows first.
 - [ ] Consider using inno setup to install your app  
       - http://www.jrsoftware.org/isinfo.php
 - [x] Allow user to specify the input/output encodings
@@ -14,6 +12,9 @@ TODO
       http://qt-project.org/wiki/Progress-bar
 
 ## buncuts.utils
+
+- [ ] Allow user to specify output line ending format.
+
 ### process_single_file()
 
 - [x]skip empty lines.
