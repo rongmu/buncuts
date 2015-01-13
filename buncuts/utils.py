@@ -44,8 +44,6 @@ def split_chunk(chunk,
                 quote_dict=default_quote_dict):
     """Split a chunk.
 
-    Notice that lines are terminated with UNIX ``\n``.
-
     Returns:
         A tuple that contains the splitted string and the count of
         sentence delimeters in the chunk: (result, count)
