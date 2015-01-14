@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>367</width>
+    <width>377</width>
     <height>227</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>367</width>
+    <width>377</width>
     <height>227</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>367</width>
-    <height>227</height>
+    <width>377</width>
+    <height>244</height>
    </size>
   </property>
   <property name="font">
@@ -104,7 +104,7 @@ p, li { white-space: pre-wrap; }
    <item>
     <widget class="QLabel" name="labelDesc">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;「文割」は、日本語のテキストをMeCab・CaBoChaが処理できるように、&lt;br/&gt;テキストの内容を一行一文に改行し、その結果を出力するユティリティです。&lt;br/&gt;&lt;br/&gt;本ソフトウェアのソースコードは、MITライセンスのもとでご利用いただけます。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;「文割」は、日本語のテキストをMeCab・CaBoChaが処理できるように、&lt;br/&gt;テキストの内容を一行一文に改行し、その結果を出力するユーティリティです。&lt;br/&gt;&lt;br/&gt;本ソフトウェアのソースコードは、MITライセンスのもとでご利用いただけます。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
