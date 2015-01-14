@@ -38,10 +38,10 @@ class QuoteChecker:
             return False
 
 
-def split_chunk(chunk,
-                sentence_delim=default_delimeter,
-                check_quote=True,
-                quote_dict=default_quote_dict):
+def split_line(chunk,
+               sentence_delim=default_delimeter,
+               check_quote=True,
+               quote_dict=default_quote_dict):
     """Split a chunk.
 
     Returns:
@@ -88,7 +88,7 @@ def process_single_file(input=sys.stdin,
                         echo=False):
     """Perform line breaks on one file.
 
-    Call ``split_chunk()`` for each line in the input file.
+    Call ``split_line()`` for each line in the input file.
 
     Args:
         input: Path of the input file.
@@ -157,9 +157,9 @@ def process_single_file(input=sys.stdin,
         if line == '\n':
             continue
 
-        line_splitted, count_added = split_chunk(line,
-                                                 sentence_delim,
-                                                 quote_dict)
+        line_splitted, count_added = split_line(line,
+                                                sentence_delim,
+                                                quote_dict)
 
         output_file.write(line_splitted)
         count += count_added
