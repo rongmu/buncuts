@@ -26,6 +26,7 @@ class QuoteChecker:
         self.quotes_remained = []
 
     def outside_quote(self, char):
+        """Return True if the char is outside a quotation, False if not."""
         if char in self.open_quotes:
             close_quote = self.quote_dict[char]
             self.quotes_remained.append(close_quote)
