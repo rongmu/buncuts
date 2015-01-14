@@ -31,6 +31,3 @@ TODO
 
 - [ ] _delayed_ implement the echo and limit option.
 - [x] skip empty lines.
-
-### split_chunk()
-
