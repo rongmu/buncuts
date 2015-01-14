@@ -43,7 +43,7 @@ def split_line(chunk,
                sentence_delim=default_delimeter,
                check_quote=True,
                quote_dict=default_quote_dict):
-    """Split a chunk.
+    """Split a line into lines of sentences.
 
     Returns:
         A tuple that contains the splitted string and the count of
