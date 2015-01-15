@@ -24,56 +24,76 @@ class QuoteChecker:
         self.quote_dict = quote_dict
         self.open_quotes = quote_dict.keys()
         self.quotes_remained = []
+        self.first_append_index = None
+        self.first_pop_index = None
 
-    def outside_quote(self, char):
+    def outside_quote(self, char, i):
         """Return True if the char is outside a quotation, False if not."""
         if char in self.open_quotes:
             close_quote = self.quote_dict[char]
             self.quotes_remained.append(close_quote)
 
+            if self.first_append_index is None:
+                self.first_append_index = i
+        elif (len(self.quotes_remained) != 0
+                and char == self.quotes_remained[-1]):
+            self.quotes_remained.pop()
+
         if len(self.quotes_remained) == 0:
+            if self.first_pop_index is None:
+                self.first_pop_index = i
             return True
         else:
-            if char == self.quotes_remained[-1]:
-                self.quotes_remained.pop()
             return False
 
 
-def split_line(chunk,
+def split_line(line,
                sentence_delim=default_delimeter,
                check_quote=True,
                quote_dict=default_quote_dict):
     """Split a line into lines of sentences.
 
     Returns:
-        A tuple that contains the splitted string and the count of
-        sentence delimeters in the chunk: (result, count)
+        The resulted string
     """
     result = ""
-    count = 0
-    length = len(chunk)
     qc = QuoteChecker(quote_dict)
 
-    for i, char in enumerate(chunk):
+    # the chars that after a sentence delimiter
+    # that should prevent insertion of newlines.
+    prevent_newline = sentence_delim + ['\n']
+
+    line = line.rstrip('\n')
+    length = len(line)
+
+    for i, char in enumerate(line):
         # Always append original char to the result.
         result = ''.join((result, char))
 
         if check_quote:
-            if qc.outside_quote(char):
+            if qc.outside_quote(char, i):
                 pass
             else:
                 continue
 
         # Additionaly, append a newline after a sentence delimeter.
         if char in sentence_delim:
-            count += 1
-
-            if i < length - 1 and chunk[i+1] != '\n':
-                result = ''.join((result, '\n'))
-            elif i == length - 1:
+            if ((i <= length - 2 and line[i+1] not in prevent_newline)
+                    or i == length - 1):
                 result = ''.join((result, '\n'))
 
-    return result, count
+    # re-parse if entire line is enclosed.
+    if (check_quote
+            and qc.first_append_index == 0
+            and qc.first_pop_index == length - 1):
+        # rstrip to avoid \n between last sentence delimeter
+        # and last quotation mark.
+        reparsed = split_line(result[1:-1]).rstrip('\n')
+        return ''.join((result[0],
+                        reparsed,
+                        result[-1]))
+    else:
+        return result
 
 
 def process_single_file(input=sys.stdin,
@@ -153,17 +173,20 @@ def process_single_file(input=sys.stdin,
         # strip half/full width spaces
         # strip() somehow don't work very well.
         # use re instead.
-        line = re.sub(r"^[ 　]+|[ 　]+$", "", line)
+        line = re.sub(r"^[ 　]+|[ 　\n]+$", "", line)
 
-        if line == '\n':
+        if line == '':
             continue
 
-        line_splitted, count_added = split_line(line,
-                                                sentence_delim,
-                                                quote_dict)
+        line_splitted = split_line(line,
+                                   sentence_delim,
+                                   quote_dict)
 
+        if line_splitted[-1] != '\n':
+            line_splitted = ''.join((line_splitted, '\n'))
+
+        count += line_splitted.count('\n')
         output_file.write(line_splitted)
-        count += count_added
 
     # close files
     if input is not sys.stdin:
