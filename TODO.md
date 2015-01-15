@@ -14,7 +14,10 @@ TODO
 
 - [ ] Strip the quotation marks of lines that are
       totally enclosed in quotation.
-  - [ ] `split_chunk()`:  
+  - [ ] `split_line()`:  
+        Before the return, see if the processed string is inside quotation.
+        If so, strip the outermost quotation marks and
+        `return split_line(result)`.
         Return a list of lines instead of a string.
         Tuple and count no longer needed.
   - [ ] `process_single_file()`:  
@@ -31,3 +34,8 @@ TODO
 
 - [ ] _delayed_ implement the echo and limit option.
 - [x] skip empty lines.
+
+## buncuts.app
+
+- [ ] `on_btnBrowseInput_clicked()`:  
+      Restrict the selectable files to *.txt files.
