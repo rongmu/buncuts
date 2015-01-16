@@ -9,7 +9,7 @@ import sys
 import io
 import re
 
-default_delimeter = list("。！？▲")
+default_delimeter = set("。！？▲")
 default_quote_dict = {"「": "」", "『": "』"}
 
 
@@ -61,7 +61,7 @@ def split_line(line,
 
     # the chars that after a sentence delimiter
     # that should prevent insertion of newlines.
-    prevent_newline = sentence_delim + ['\n']
+    prevent_newline = sentence_delim | set('\n')
 
     line = line.rstrip('\n')
     length = len(line)
@@ -122,7 +122,7 @@ def process_single_file(input=sys.stdin,
         output_newline: The newline formart of the output file(s).
         append: Whether append to output or not.
         is_dir: Whether the output is a directory or a regular file.
-        sentence_delim: A list of sentence delimeters.
+        sentence_delim: A set of sentence delimeters.
         quote_dict: A dict that maps opening quote marks
             to its closing counterpart.
         limit: The limit for maximum amout of sentences
