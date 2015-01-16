@@ -86,9 +86,13 @@ def split_line(line,
     if (check_quote
             and qc.first_append_index == 0
             and qc.first_pop_index == length - 1):
+        reparsed = split_line(result[1:-1],
+                              sentence_delim,
+                              check_quote,
+                              quote_dict)
         # rstrip to avoid \n between last sentence delimeter
         # and last quotation mark.
-        reparsed = split_line(result[1:-1]).rstrip('\n')
+        reparsed = reparsed.rstrip('\n')
         return ''.join((result[0],
                         reparsed,
                         result[-1]))
