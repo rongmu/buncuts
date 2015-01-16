@@ -29,7 +29,7 @@ class _QuoteChecker:
         self.first_append_index = None
         self.first_pop_index = None
 
-    def outside_quote(self, char, i):
+    def is_outside_quote(self, char, i):
         """Return True if the char is outside a quotation, False if not."""
         if char in self.open_quotes:
             close_quote = self.quote_dict[char]
@@ -77,7 +77,7 @@ class TextSplitter:
         self.quote_dict = quote_dict
         self.check_quote = check_quote
 
-    def _split_single_file(self, input_path, output_file):
+    def _process_single_file(self, input_path, output_file):
         input_file = io.open(input_path,
                              mode='r',
                              encoding=self.input_enc)
@@ -112,7 +112,7 @@ class TextSplitter:
                                   newline=output_newline)
 
             try:
-                self._split_single_file(file_path, output_file)
+                self._process_single_file(file_path, output_file)
             finally:
                 output_file.close()
 
@@ -130,11 +130,11 @@ class TextSplitter:
 
         try:
             for file_path in self.input_list:
-                self._split_single_file(file_path, output_file)
+                self._process_single_file(file_path, output_file)
         finally:
             output_file.close()
 
-    def split(self):
+    def process(self):
         if self.output_is_dir:
             self._output_to_dir()
         else:
@@ -172,7 +172,7 @@ def split_line(line,
         result = ''.join((result, char))
 
         if check_quote:
-            if qc.outside_quote(char, i):
+            if qc.is_outside_quote(char, i):
                 pass
             else:
                 continue
