@@ -1,6 +1,7 @@
 TODO
 ====
 
+- [ ] Consider switch to GPL License
 - [ ] Consider using inno setup to install your app  
       - http://www.jrsoftware.org/isinfo.php
 
@@ -12,8 +13,9 @@ TODO
 
 ## buncuts.utils
 
+- [ ] Consider using class to hold the data and functions.
 - [ ] _delayed_ Perhaps also check whether the splitted sentences are enclosed.
-- [ ] Also implent a simple quote checking method that only do one-level check?
+- [ ] _delayed_ Also implent a simple quote checking method that only do one-level check?
 - [x] Split lines that are totally enclosed in quotation.
 - [x] Should use a FILO to avoid multiple embeded quotations.
 - [x] Allow user to specify output line ending format in API.
