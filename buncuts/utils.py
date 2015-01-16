@@ -88,19 +88,19 @@ class _QuoteChecker:
     """
     def __init__(self, quote_dict):
         self.quote_dict = quote_dict
-        self.open_quotes = quote_dict.keys()
         self.quotes_remained = []
         self.first_append_index = None
         self.first_pop_index = None
 
     def is_outside_quote(self, char, i):
         """Return True if the char is outside a quotation, False if not."""
-        if char in self.open_quotes:
+        if char in self.quote_dict:
             close_quote = self.quote_dict[char]
             self.quotes_remained.append(close_quote)
 
             if self.first_append_index is None:
                 self.first_append_index = i
+
         elif (len(self.quotes_remained) != 0
                 and char == self.quotes_remained[-1]):
             self.quotes_remained.pop()
