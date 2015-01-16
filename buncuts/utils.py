@@ -15,6 +15,68 @@ default_input_enc = 'sjis'
 default_output_enc = default_input_enc
 
 
+def _get_newline(file_path, enc):
+    newline = None
+
+    with io.open(file_path, 'r', encoding=enc) as f:
+        f.readline()
+        newline = f.newlines
+
+    return newline
+
+
+def split_line(line,
+               delimiters=default_delimeter,
+               quote_dict=default_quote_dict,
+               check_quote=True):
+    """Split a line into lines of sentences.
+
+    Returns:
+        The resulted string
+    """
+    result = ""
+    newline_preventers = delimiters | {'\n'}
+    qc = _QuoteChecker(quote_dict)
+
+    line = line.rstrip('\n')
+    length = len(line)
+
+    for i, char in enumerate(line):
+        # Always append original char to the result.
+        result = ''.join((result, char))
+
+        if check_quote:
+            if qc.is_outside_quote(char, i):
+                pass
+            else:
+                continue
+
+        # Additionaly, append a newline after a sentence delimeter.
+        if char in delimiters:
+            if ((i <= length - 2 and line[i+1] not in newline_preventers)
+                    or i == length - 1):
+                result = ''.join((result, '\n'))
+
+    # re-parse if entire line is enclosed.
+    if (check_quote
+            and qc.first_append_index == 0
+            and qc.first_pop_index == length - 1):
+        reparsed = split_line(result[1:-1],
+                              delimiters,
+                              quote_dict,
+                              check_quote)
+        # rstrip to avoid \n before the last quotation mark.
+        reparsed = reparsed.rstrip('\n')
+        result = ''.join((result[0],
+                          reparsed,
+                          result[-1]))
+
+    if result[-1] != '\n':
+        result = ''.join((result, '\n'))
+
+    return result
+
+
 class _QuoteChecker:
     """Quote checker.
 
@@ -145,65 +207,3 @@ class TextSplitter:
             self._output_to_dir()
         else:
             self._output_to_file()
-
-
-def _get_newline(file_path, enc):
-    newline = None
-
-    with io.open(file_path, 'r', encoding=enc) as f:
-        f.readline()
-        newline = f.newlines
-
-    return newline
-
-
-def split_line(line,
-               delimiters=default_delimeter,
-               quote_dict=default_quote_dict,
-               check_quote=True):
-    """Split a line into lines of sentences.
-
-    Returns:
-        The resulted string
-    """
-    result = ""
-    newline_preventers = delimiters | {'\n'}
-    qc = _QuoteChecker(quote_dict)
-
-    line = line.rstrip('\n')
-    length = len(line)
-
-    for i, char in enumerate(line):
-        # Always append original char to the result.
-        result = ''.join((result, char))
-
-        if check_quote:
-            if qc.is_outside_quote(char, i):
-                pass
-            else:
-                continue
-
-        # Additionaly, append a newline after a sentence delimeter.
-        if char in delimiters:
-            if ((i <= length - 2 and line[i+1] not in newline_preventers)
-                    or i == length - 1):
-                result = ''.join((result, '\n'))
-
-    # re-parse if entire line is enclosed.
-    if (check_quote
-            and qc.first_append_index == 0
-            and qc.first_pop_index == length - 1):
-        reparsed = split_line(result[1:-1],
-                              delimiters,
-                              quote_dict,
-                              check_quote)
-        # rstrip to avoid \n before the last quotation mark.
-        reparsed = reparsed.rstrip('\n')
-        result = ''.join((result[0],
-                          reparsed,
-                          result[-1]))
-
-    if result[-1] != '\n':
-        result = ''.join((result, '\n'))
-
-    return result
