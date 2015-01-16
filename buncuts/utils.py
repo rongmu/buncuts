@@ -61,6 +61,12 @@ class TextSplitter:
                  delimiters=default_delimeter,
                  quote_dict=default_quote_dict,
                  check_quote=True):
+        """ Text Splitter.
+
+        Notice on Arguments:
+            input_list: A list of paths of input files.
+            delimiters: A set of sentence delimiters.
+        """
         self.input_list = input_list
         self.input_enc = input_enc
 
