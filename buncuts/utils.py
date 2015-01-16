@@ -34,7 +34,7 @@ def split_line(line,
     Returns:
         The resulted string
     """
-    result = ""
+    result_list = []
     newline_preventers = delimiters | {'\n'}
     qc = _QuoteChecker(quote_dict)
 
@@ -43,7 +43,7 @@ def split_line(line,
 
     for i, char in enumerate(line):
         # Always append original char to the result.
-        result = ''.join((result, char))
+        result_list.append(char)
 
         if check_quote:
             if qc.is_outside_quote(char, i):
@@ -55,7 +55,9 @@ def split_line(line,
         if char in delimiters:
             if ((i <= length - 2 and line[i+1] not in newline_preventers)
                     or i == length - 1):
-                result = ''.join((result, '\n'))
+                result_list.append('\n')
+
+    result = ''.join(result_list)
 
     # re-parse if entire line is enclosed.
     if (check_quote
