@@ -75,6 +75,7 @@ def build():
              name=exe_name, icon=app_icon, script=app_file),
         echo=True)
 
+
 @task
 def clean():
     """clean the build files of PyInstaller"""
