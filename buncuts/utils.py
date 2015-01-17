@@ -87,25 +87,25 @@ class _QuoteChecker:
     in a sequence of text.
     """
     def __init__(self, quote_dict):
-        self.quote_dict = quote_dict
-        self.quotes_remained = []
+        self._quote_dict = quote_dict
+        self._quotes_remained = []
         self.first_append_index = None
         self.first_pop_index = None
 
     def is_outside_quote(self, char, i):
         """Return True if the char is outside a quotation, False if not."""
-        if char in self.quote_dict:
-            close_quote = self.quote_dict[char]
-            self.quotes_remained.append(close_quote)
+        if char in self._quote_dict:
+            close_quote = self._quote_dict[char]
+            self._quotes_remained.append(close_quote)
 
             if self.first_append_index is None:
                 self.first_append_index = i
 
-        elif (len(self.quotes_remained) != 0
-                and char == self.quotes_remained[-1]):
-            self.quotes_remained.pop()
+        elif (len(self._quotes_remained) != 0
+                and char == self._quotes_remained[-1]):
+            self._quotes_remained.pop()
 
-        if len(self.quotes_remained) == 0:
+        if len(self._quotes_remained) == 0:
             if self.first_pop_index is None:
                 self.first_pop_index = i
             return True
@@ -131,26 +131,26 @@ class TextSplitter:
             input_list: A list of paths of input files.
             delimiters: A set of sentence delimiters.
         """
-        self.input_list = input_list
-        self.input_enc = input_enc
+        self._input_list = input_list
+        self._input_enc = input_enc
 
-        self.output_path = output_path
-        self.output_enc = output_enc
-        self.output_newline = output_newline
-        self.output_is_dir = output_is_dir
+        self._output_path = output_path
+        self._output_enc = output_enc
+        self._output_newline = output_newline
+        self._output_is_dir = output_is_dir
         if output_append:
-            self.write_mode = 'a'
+            self._write_mode = 'a'
         else:
-            self.write_mode = 'w'
+            self._write_mode = 'w'
 
-        self.delimiters = delimiters
-        self.quote_dict = quote_dict
-        self.check_quote = check_quote
+        self._delimiters = delimiters
+        self._quote_dict = quote_dict
+        self._check_quote = check_quote
 
     def _process_single_file(self, input_path, output_file):
         input_file = io.open(input_path,
                              mode='r',
-                             encoding=self.input_enc)
+                             encoding=self._input_enc)
         try:
             for line in input_file:
                 line = re.sub(r"^[ 　]+|[ 　\n]+$", "", line)
@@ -159,26 +159,26 @@ class TextSplitter:
                     continue
 
                 line_splitted = split_line(line,
-                                           self.delimiters,
-                                           self.quote_dict,
-                                           self.check_quote)
+                                           self._delimiters,
+                                           self._quote_dict,
+                                           self._check_quote)
                 output_file.write(line_splitted)
         finally:
             input_file.close()
 
     def _output_to_dir(self):
-        for file_path in self.input_list:
-            if self.output_newline is None:
+        for file_path in self._input_list:
+            if self._output_newline is None:
                 output_newline = _get_newline(file_path,
-                                              self.input_enc)
+                                              self._input_enc)
             else:
-                output_newline = self.output_newline
+                output_newline = self._output_newline
 
-            output_path = os.path.join(self.output_path,
+            output_path = os.path.join(self._output_path,
                                        os.path.basename(file_path))
             output_file = io.open(output_path,
-                                  mode=self.write_mode,
-                                  encoding=self.output_enc,
+                                  mode=self._write_mode,
+                                  encoding=self._output_enc,
                                   newline=output_newline)
 
             try:
@@ -187,25 +187,25 @@ class TextSplitter:
                 output_file.close()
 
     def _output_to_file(self):
-        if self.output_newline is None:
-            output_newline = _get_newline(self.input_list[0],
-                                          self.input_enc)
+        if self._output_newline is None:
+            output_newline = _get_newline(self._input_list[0],
+                                          self._input_enc)
         else:
-            output_newline = self.output_newline
+            output_newline = self._output_newline
 
-        output_file = io.open(self.output_path,
-                              mode=self.write_mode,
-                              encoding=self.output_enc,
+        output_file = io.open(self._output_path,
+                              mode=self._write_mode,
+                              encoding=self._output_enc,
                               newline=output_newline)
 
         try:
-            for file_path in self.input_list:
+            for file_path in self._input_list:
                 self._process_single_file(file_path, output_file)
         finally:
             output_file.close()
 
     def process(self):
-        if self.output_is_dir:
+        if self._output_is_dir:
             self._output_to_dir()
         else:
             self._output_to_file()
