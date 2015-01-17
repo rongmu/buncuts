@@ -11,7 +11,7 @@ sip.setapi('QString', 2)
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
 
-from . import utils
+from .utils import TextSplitter
 from .ui.main import Ui_MainWindow
 from .ui.about import Ui_AboutDialog
 
@@ -61,9 +61,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def processLineBreaks(self):
         paths = self.lineInput.text().split(path_delimeter)
 
-        utils.split_sentences(input_list=paths,
-                              output=self.lineOutput.text(),
-                              is_dir=True)
+        ts = TextSplitter(input_list=paths,
+                          output_path=self.lineOutput.text(),
+                          output_is_dir=True)
+        ts.process()
 
 
 def main():
