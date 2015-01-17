@@ -1,6 +1,8 @@
 TODO
 ====
 
+- [x] Solve the UI Blocking problem.
+
 ## Qt
 
 - [ ] Subclass QProgressDialog.

@@ -38,7 +38,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         quote_text = self.lineQuotes.text().replace('；', ';').strip(' 　;')
         quote_list = quote_text.split(';')
 
-        quote_dict =  { pair[0]: pair[1] for pair in quote_list }
+        quote_dict = {pair[0]: pair[1] for pair in quote_list}
         return quote_dict
 
     def _get_splitter(self):
@@ -76,12 +76,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         ts = TextSplitter(input_list=input_list,
                           output_path=output_path,
                           output_is_dir=output_is_dir,
-                          input_enc = input_enc,
-                          output_enc = output_enc,
-                          output_newline = output_newline,
-                          delimiters = delimiters,
-                          check_quote = check_quote,
-                          quote_dict = quote_dict)
+                          input_enc=input_enc,
+                          output_enc=output_enc,
+                          output_newline=output_newline,
+                          delimiters=delimiters,
+                          check_quote=check_quote,
+                          quote_dict=quote_dict)
 
         return ts
 
@@ -89,24 +89,27 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.centralwidget.setDisabled(True)
         btnExecute_original_text = self.btnExecute.text()
         self.btnExecute.setText('準備中...')
-        self.centralwidget.repaint()
 
         ts = self._get_splitter()
         print(unicode(ts))  # for debug use
 
         dialogProgress = QtGui.QProgressDialog("処理中", "キャンセル",
-                                            0,
-                                            0,
-                                            parent=self)
+                                               0,
+                                               0,
+                                               parent=self)
         dialogProgress.setWindowModality(QtCore.Qt.WindowModal)
+        dialogProgress.setMinimumDuration(0)
+
+        QtGui.QApplication.processEvents()
 
         try:
             # somehow you have to setMaximum
             # after the progress dialog is created.
             dialogProgress.setMaximum(ts.total_lines())
+            dialogProgress.show()
 
             self.btnExecute.setText('実行中...')
-            ts.process(progress=dialogProgress)
+            ts.process(progress=dialogProgress, qapp=QtGui.QApplication)
 
         finally:
             self.btnExecute.setText(btnExecute_original_text)

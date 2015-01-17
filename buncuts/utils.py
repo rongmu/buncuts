@@ -156,8 +156,8 @@ class TextSplitter(object):
         delim_list.sort()
         delimiters = ''.join(delim_list)
 
-        quote_list = [ "{open_}{close}".format(open_=k, close=v)
-                      for k, v in self._quote_dict.iteritems() ]
+        quote_list = ["{open_}{close}".format(open_=k, close=v)
+                      for k, v in self._quote_dict.iteritems()]
         quotes = ';'.join(quote_list)
 
         summary = ("Summary {repr_}\n"
@@ -197,6 +197,7 @@ class TextSplitter(object):
                         break
                     self._count += 1
                     self._progress.setValue(self._count)
+                    self._qapp.processEvents()
 
                 line = re.sub(r"^[ 　]+|[ 　\n]+$", "", line)
 
@@ -259,10 +260,13 @@ class TextSplitter(object):
         num_lines = sum(1 for f in self._input_list for line in open(f))
         return num_lines
 
-    def process(self, progress=None):
+    def process(self, progress=None, qapp=None):
         if progress is not None:
             self._progress = progress
+            self._qapp = qapp
             self._count = 0
+        else:
+            self._progress = None
 
         if self._output_is_dir:
             self._output_to_dir()
