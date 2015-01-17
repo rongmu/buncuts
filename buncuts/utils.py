@@ -123,7 +123,7 @@ class TextSplitter(object):
                  check_quote=True):
         """ Text Splitter.
 
-        Note on Arguments:
+        Notes on Arguments:
             input_list: A list of paths of input files.
             delimiters: A set of sentence delimiters.
         """
