@@ -79,7 +79,7 @@ def split_line(line,
     return result
 
 
-class _QuoteChecker:
+class _QuoteChecker(object):
     """Quote checker.
 
     The instance is expected to be used in an iteration,
@@ -113,7 +113,7 @@ class _QuoteChecker:
             return False
 
 
-class TextSplitter:
+class TextSplitter(object):
     def __init__(self,
                  input_list,
                  output_path,
