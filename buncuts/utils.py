@@ -29,11 +29,7 @@ def split_line(line,
                delimiters=default_delimeter,
                quote_dict=default_quote_dict,
                check_quote=True):
-    """Split a line into lines of sentences.
-
-    Returns:
-        The resulted string
-    """
+    """Split a line into lines of sentences and return the resulted string."""
     result_list = []
     newline_preventers = delimiters | {'\n'}
     qc = _QuoteChecker(quote_dict)
@@ -83,7 +79,7 @@ class _QuoteChecker(object):
     """Quote checker.
 
     The instance is expected to be used in an iteration,
-    to check whether a character is inside a (nested) quotatoin
+    to check whether a character is inside a (nested) quotation
     in a sequence of text.
     """
     def __init__(self, quote_dict):
@@ -127,7 +123,7 @@ class TextSplitter(object):
                  check_quote=True):
         """ Text Splitter.
 
-        Notice on Arguments:
+        Note on Arguments:
             input_list: A list of paths of input files.
             delimiters: A set of sentence delimiters.
         """
