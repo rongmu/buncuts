@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>16777215</width>
-    <height>11111111</height>
+    <width>433</width>
+    <height>421</height>
    </size>
   </property>
   <property name="font">
@@ -97,14 +97,14 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="label">
+             <widget class="QLabel" name="labelInputEnc">
               <property name="text">
                <string>入力文字コード：</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox">
+             <widget class="QComboBox" name="cbInputEnc">
               <property name="editable">
                <bool>true</bool>
               </property>
@@ -177,7 +177,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton">
+             <widget class="QRadioButton" name="rbOutputIsFolder">
               <property name="text">
                <string>フォルダ</string>
               </property>
@@ -187,7 +187,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton_2">
+             <widget class="QRadioButton" name="rbOutputIsFile">
               <property name="text">
                <string>ファイル</string>
               </property>
@@ -207,14 +207,14 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="label_2">
+             <widget class="QLabel" name="labelOutputEnc">
               <property name="text">
                <string>出力文字コード：</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_2">
+             <widget class="QComboBox" name="cbOutputEnc">
               <property name="editable">
                <bool>true</bool>
               </property>
@@ -320,14 +320,14 @@
           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
          </property>
          <item row="0" column="0">
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="labelNewline">
            <property name="text">
             <string>改行コード：</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="comboBox_3">
+          <widget class="QComboBox" name="cbNewline">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -349,20 +349,20 @@
            </item>
            <item>
             <property name="text">
-             <string>LF(Mac OS X/Linux/Unix)</string>
+             <string>LF(Unix/Mac OS X/Linux)</string>
             </property>
            </item>
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="label_4">
+          <widget class="QLabel" name="labelDelimiters">
            <property name="text">
             <string>文区切文字：</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLineEdit" name="lineEdit_2">
+          <widget class="QLineEdit" name="lineDelimiters">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -382,7 +382,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="checkQuote">
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
@@ -395,7 +395,7 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QLineEdit" name="lineEdit">
+          <widget class="QLineEdit" name="lineQuotes">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -493,6 +493,9 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="sizeGripEnabled">
     <bool>false</bool>
    </property>
@@ -514,10 +517,10 @@
  <tabstops>
   <tabstop>btnBrowseInput</tabstop>
   <tabstop>lineInput</tabstop>
-  <tabstop>comboBox</tabstop>
+  <tabstop>cbInputEnc</tabstop>
   <tabstop>btnBrowseOutput</tabstop>
   <tabstop>lineOutput</tabstop>
-  <tabstop>comboBox_2</tabstop>
+  <tabstop>cbOutputEnc</tabstop>
   <tabstop>btnExecute</tabstop>
  </tabstops>
  <resources>
