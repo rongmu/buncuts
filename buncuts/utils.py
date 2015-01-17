@@ -192,6 +192,12 @@ class TextSplitter(object):
                              encoding=self._input_enc)
         try:
             for line in input_file:
+                if self._progress is not None:
+                    if self._progress.wasCanceled():
+                        break
+                    self._count += 1
+                    self._progress.setValue(self._count)
+
                 line = re.sub(r"^[ 　]+|[ 　\n]+$", "", line)
 
                 if line == '':
@@ -207,6 +213,9 @@ class TextSplitter(object):
 
     def _output_to_dir(self):
         for file_path in self._input_list:
+            if self._progress is not None and self._progress.wasCanceled():
+                break
+
             if self._output_newline is None:
                 output_newline = _get_newline(file_path,
                                               self._input_enc)
@@ -239,11 +248,22 @@ class TextSplitter(object):
 
         try:
             for file_path in self._input_list:
+                if self._progress is not None and self._progress.wasCanceled():
+                    break
+
                 self._process_single_file(file_path, output_file)
         finally:
             output_file.close()
 
-    def process(self):
+    def total_lines(self):
+        num_lines = sum(1 for f in self._input_list for line in open(f))
+        return num_lines
+
+    def process(self, progress=None):
+        if progress is not None:
+            self._progress = progress
+            self._count = 0
+
         if self._output_is_dir:
             self._output_to_dir()
         else:
