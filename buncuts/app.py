@@ -58,13 +58,55 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def on_btnExecute_clicked(self):
         self.processLineBreaks()
 
-    def processLineBreaks(self):
-        paths = self.lineInput.text().split(path_delimeter)
+    def _get_quote_dict(self):
+        quote_text = self.lineQuotes.text().replace('；', ';').strip(' 　;')
+        quote_list = quote_text.split(';')
 
-        ts = TextSplitter(input_list=paths,
-                          output_path=self.lineOutput.text(),
-                          output_is_dir=True)
-        ts.process()
+        quote_dict =  { pair[0]: pair[1] for pair in quote_list }
+        return quote_dict
+
+    def processLineBreaks(self):
+        input_list = self.lineInput.text().strip(' 　').split(path_delimeter)
+        output_path = self.lineOutput.text().strip(' 　')
+
+        if self.rbOutputIsFolder.isChecked():
+            output_is_dir = True
+        else:
+            output_is_dir = False
+
+        input_enc = self.cbInputEnc.currentText().strip(' 　')
+        output_enc = self.cbOutputEnc.currentText().strip(' 　')
+        if "同じ" in output_enc:
+            output_enc = input_enc
+
+        _output_newline = self.cbNewline.currentText()
+        if _output_newline.startswith("CRLF"):
+            output_newline = "\r\n"
+        elif _output_newline.startswith("LF"):
+            output_newline = "\n"
+        else:
+            # TextSplitter will use the same newline as the input file
+            output_newline = None
+
+        delimiters = set(self.lineDelimiters.text().strip(' 　'))
+
+        if self.checkQuote.isChecked():
+            check_quote = True
+        else:
+            check_quote = False
+
+        quote_dict = self._get_quote_dict()
+
+        ts = TextSplitter(input_list=input_list,
+                          output_path=output_path,
+                          output_is_dir=output_is_dir,
+                          input_enc = input_enc,
+                          output_enc = output_enc,
+                          output_newline = output_newline,
+                          delimiters = delimiters,
+                          check_quote = check_quote,
+                          quote_dict = quote_dict)
+        print(unicode(ts))
 
 
 def main():
