@@ -514,5 +514,22 @@
  <resources>
   <include location="../app.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>checkQuote</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lineQuotes</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>112</x>
+     <y>326</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>285</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
