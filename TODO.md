@@ -3,9 +3,7 @@ TODO
 
 ## Qt
 
-- [ ] _delayed_ Implement progress indicator. eg. ProgressBar.
-      (QFuture depends on C++, is not supported in Python)  
-      http://qt-project.org/wiki/Progress-bar
+- [ ] Subclass QProgressDialog.
 
 ## buncuts.utils
 
