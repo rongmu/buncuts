@@ -113,14 +113,14 @@ class TextSplitter(object):
     def __init__(self,
                  input_list,
                  output_path,
+                 output_is_dir=False,
+                 output_append=False,
                  input_enc=default_input_enc,
                  output_enc=default_output_enc,
                  output_newline=None,
-                 output_is_dir=False,
-                 output_append=False,
                  delimiters=default_delimeter,
-                 quote_dict=default_quote_dict,
-                 check_quote=True):
+                 check_quote=True,
+                 quote_dict=default_quote_dict):
         """ Text Splitter.
 
         Notes on Arguments:
@@ -142,6 +142,49 @@ class TextSplitter(object):
         self._delimiters = delimiters
         self._quote_dict = quote_dict
         self._check_quote = check_quote
+
+    def __unicode__(self):
+        if self._output_newline is None:
+            output_newline = "Same as input"
+        else:
+            if self._output_newline == '\r\n':
+                output_newline = "CRLF"
+            elif self._output_newline == '\n':
+                output_newline = "LF"
+
+        delim_list = list(self._delimiters)
+        delim_list.sort()
+        delimiters = ''.join(delim_list)
+
+        quote_list = [ "{open_}{close}".format(open_=k, close=v)
+                      for k, v in self._quote_dict.iteritems() ]
+        quotes = ';'.join(quote_list)
+
+        summary = ("Summary {repr_}\n"
+                   "-------\n"
+                   "Input List: {input_list}\n"
+                   "Output Path: {output_path}\n"
+                   "Is Output a Directory? {output_is_dir}\n"
+                   "Output Write Mode: {write_mode}\n"
+                   "Input Encoding: {input_enc}\n"
+                   "Output Encoding: {output_enc}\n"
+                   "Output Newline Format: {output_newline}\n"
+                   "Sentence Delimiters: {delimiters}\n"
+                   "Check Quotation? {check_quote}\n"
+                   "Quotations: {quotes}\n"
+                   ).format(repr_=repr(self),
+                            input_list=";".join(self._input_list),
+                            output_path=self._output_path,
+                            output_is_dir=self._output_is_dir,
+                            write_mode=self._write_mode,
+                            input_enc=self._input_enc,
+                            output_enc=self._output_enc,
+                            output_newline=output_newline,
+                            delimiters=delimiters,
+                            check_quote=self._check_quote,
+                            quotes=quotes)
+
+        return summary
 
     def _process_single_file(self, input_path, output_file):
         input_file = io.open(input_path,
