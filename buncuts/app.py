@@ -4,7 +4,9 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os.path
 import sys
+
 # select PyQt API v2
 import sip
 sip.setapi('QString', 2)
@@ -18,6 +20,7 @@ from .ui.about import Ui_AboutDialog
 
 # delimeter for multiple paths
 path_delimeter = ";"
+file_filter = "テキストファイル (*.txt);;すべてのファイル (*.*)"
 
 
 class AboutDialog(QtGui.QDialog, Ui_AboutDialog):
@@ -59,6 +62,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self.setupUi(self)
+
+        self._file_filter = file_filter
 
     def _get_quote_dict(self):
         quote_text = self.lineQuotes.text().replace('；', ';').strip(' 　;')
@@ -186,25 +191,35 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_btnBrowseInput_clicked(self):
-        files = QtGui.QFileDialog.getOpenFileNames(self, "ファイルを開く")
+        files = QtGui.QFileDialog.\
+                getOpenFileNames(parent=self,
+                                 caption="ファイルを開く",
+                                 filter=self._file_filter)
         if len(files) != 0:
             self.lineInput.setText(path_delimeter.join(files))
 
     @pyqtSlot()
     def on_btnBrowseOutput_clicked(self):
-        folder = QtGui.QFileDialog.getExistingDirectory(self, "フォルダを開く")
-        if len(folder) != 0:
-            self.lineOutput.setText(folder)
+        if self.rbOutputIsFolder.isChecked():
+            output_path = QtGui.QFileDialog.\
+                getExistingDirectory(parent=self,
+                                     caption="フォルダを開く")
+        else:
+            # somehow it returns path in unix style
+            output_path = QtGui.QFileDialog.\
+                getSaveFileName(parent=self,
+                                caption="ファイルを開く",
+                                filter=self._file_filter)
+
+        if len(output_path) != 0:
+            self.lineOutput.setText(os.path.normpath(output_path))
 
     @pyqtSlot()
     def on_btnExecute_clicked(self):
-        # TODO: pre-processing check
         self.process()
 
 
 def main():
-    import sys
-
     app = QtGui.QApplication(sys.argv)
     win = MainWindow()
     win.show()

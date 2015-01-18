@@ -7,7 +7,7 @@ TODO
 ## Pre-process Checks
 - [ ] Output should not be empty. Otherwise will output to pwd.
       Also should validate output path.
-- [ ] raise error in `_get_quote_dict`
+- [ ] raise error in `_get_quote_dict`: QuoteUnevenError
 
 ## Qt
 
@@ -26,5 +26,5 @@ TODO
 
 ## buncuts.app
 
-- [ ] `on_btnBrowseInput_clicked()`:  
+- [x] `on_btnBrowseInput_clicked()`:  
       Restrict the selectable files to *.txt files.
