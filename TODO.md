@@ -1,11 +1,18 @@
 TODO
 ====
 
+- [ ] Progress stucks when input has only one or zero line.
 - [x] Solve the UI Blocking problem.
+
+## Pre-process Checks
+- [ ] Output should not be empty. Otherwise will output to pwd.
+      Also should validate output path.
+- [ ] raise error in `_get_quote_dict`
 
 ## Qt
 
-- [ ] Subclass QProgressDialog.
+- [ ] class ErroBox(QMessageBox)
+- [x] Subclass QProgressDialog.
 
 ## buncuts.utils
 

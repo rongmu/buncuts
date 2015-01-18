@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import sys
 # select PyQt API v2
 import sip
 sip.setapi('QString', 2)
@@ -27,6 +28,31 @@ class AboutDialog(QtGui.QDialog, Ui_AboutDialog):
     @pyqtSlot()
     def on_buttonBox_accepted(self):
         self.accept()
+
+
+class ProgressDialog(QtGui.QProgressDialog):
+    def __init__(self, parent=None):
+        super(ProgressDialog, self).__init__("処理中",
+                                             "キャンセル",
+                                             0,
+                                             0,
+                                             parent)
+        self.setWindowTitle("BunCuts")
+
+        font = QtGui.QFont()
+        font.setFamily('Meiryo UI')
+        self.setFont(font)
+
+        self.setWindowModality(QtCore.Qt.WindowModal)
+
+
+class ErrorBox(QtGui.QMessageBox):
+    def __init__(self, text, parent=None):
+        super(ErrorBox, self).__init__(parent=parent)
+        self.setWindowTitle("エラー")
+        self.setIcon(QtGui.QMessageBox.Warning)
+        self.setText(text)
+        self.exec_()  # auto execute
 
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
@@ -90,26 +116,59 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         btnExecute_original_text = self.btnExecute.text()
         self.btnExecute.setText('準備中...')
 
-        ts = self._get_splitter()
-        print(unicode(ts))  # for debug use
-
-        dialogProgress = QtGui.QProgressDialog("処理中", "キャンセル",
-                                               0,
-                                               0,
-                                               parent=self)
-        dialogProgress.setWindowModality(QtCore.Qt.WindowModal)
-        dialogProgress.setMinimumDuration(0)
-
+        dialogProgress = ProgressDialog(self)
         QtGui.QApplication.processEvents()
 
         try:
+            ts = self._get_splitter()
+            print(unicode(ts))  # debug use
+
             # somehow you have to setMaximum
             # after the progress dialog is created.
             dialogProgress.setMaximum(ts.total_lines())
-            dialogProgress.show()
+            # ensure the dialog is displayed...
+            # sometimes it won't show up without this.
+            dialogProgress.forceShow()
 
             self.btnExecute.setText('実行中...')
+
+            print("Start")
             ts.process(progress=dialogProgress, qapp=QtGui.QApplication)
+
+        except LookupError as e:
+            print("Error: {error}".format(error=e))  # debug use
+            dialogProgress.cancel()
+            ErrorBox("ご指定の文字コードは正しくないようです。", self)
+
+        except UnicodeDecodeError as e:
+            print("Error: {error}".format(error=e))  # debug use
+            dialogProgress.cancel()
+            ErrorBox("入力文字コードは正しくないようです。", self)
+
+        except UnicodeEncodeError as e:
+            print("Error: {error}".format(error=e))  # debug use
+            dialogProgress.cancel()
+            ErrorBox(("入力テキストをご指定の出力文字コードで"
+                      "出力することができません。"),
+                     self)
+
+        except:
+            dialogProgress.cancel()
+            ErrorBox("{} {}".format(sys.exc_info()[0],
+                                    sys.exc_info()[1]),
+                     self)
+
+        else:
+            if dialogProgress.wasCanceled():
+                print("Cancelled")
+            else:
+                print("Succeed")
+
+                box = QtGui.QMessageBox(parent=self)
+                box.setWindowTitle("成功！")
+                box.setIcon(QtGui.QMessageBox.Information)
+                box.setText("処理が終わりました。")
+                box.exec_()
 
         finally:
             self.btnExecute.setText(btnExecute_original_text)
@@ -139,6 +198,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @pyqtSlot()
     def on_btnExecute_clicked(self):
+        # TODO: pre-processing check
         self.process()
 
 
