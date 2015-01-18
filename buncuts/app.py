@@ -23,6 +23,33 @@ path_delimeter = ";"
 file_filter = "テキストファイル (*.txt);;すべてのファイル (*.*)"
 
 
+class QuoteUnevenError(Exception):
+    def __str__(self):
+        return "uneven quote pair"
+
+
+class EmptyFieldError(Exception):
+    def __init__(self, etype):
+        """Indicate an empty field
+
+        Notes:
+            The argument etype is a string that tells which field is empty
+        """
+        self.etype = etype
+
+    def __str__(self):
+        return "field '{}' is empty".format(self.etype)
+
+
+class ErrorBox(QtGui.QMessageBox):
+    def __init__(self, text, parent=None):
+        super(ErrorBox, self).__init__(parent=parent)
+        self.setWindowTitle("エラー")
+        self.setIcon(QtGui.QMessageBox.Warning)
+        self.setText(text)
+        self.exec_()  # auto execute
+
+
 class AboutDialog(QtGui.QDialog, Ui_AboutDialog):
     def __init__(self, parent=None, flags=0):
         QtGui.QDialog.__init__(self, parent, flags)
@@ -49,15 +76,6 @@ class ProgressDialog(QtGui.QProgressDialog):
         self.setWindowModality(QtCore.Qt.WindowModal)
 
 
-class ErrorBox(QtGui.QMessageBox):
-    def __init__(self, text, parent=None):
-        super(ErrorBox, self).__init__(parent=parent)
-        self.setWindowTitle("エラー")
-        self.setIcon(QtGui.QMessageBox.Warning)
-        self.setText(text)
-        self.exec_()  # auto execute
-
-
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
@@ -66,11 +84,46 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self._file_filter = file_filter
 
     def _get_quote_dict(self):
-        quote_text = self.lineQuotes.text().replace('；', ';').strip(' 　;')
-        quote_list = quote_text.split(';')
+        try:
+            quote_text = self.lineQuotes.text().replace('；', ';').strip(' 　;')
 
-        quote_dict = {pair[0]: pair[1] for pair in quote_list}
-        return quote_dict
+            if len(quote_text) == 0:
+                raise EmptyFieldError('quote_dict')
+
+            quote_list = quote_text.split(';')
+
+            for pair in quote_list:
+                if len(pair) != 2:
+                    raise QuoteUnevenError
+
+            quote_dict = {pair[0]: pair[1] for pair in quote_list}
+            return quote_dict
+
+        except IndexError:
+            raise QuoteUnevenError
+
+    def _check_empty(self, ts):
+        # input_list
+        if len(ts._input_list) == 1 and len(ts._input_list[0]) == 0:
+            raise EmptyFieldError('input_list')
+
+        # output_path
+        if len(ts._output_path) == 0:
+            raise EmptyFieldError('output_path')
+
+        # input_enc
+        if len(ts._input_enc) == 0:
+            raise EmptyFieldError('input_enc')
+
+        # output_enc
+        if len(ts._output_enc) == 0:
+            raise EmptyFieldError('output_enc')
+
+        # delimiters
+        if len(ts._delimiters) == 0:
+            raise EmptyFieldError('delimiters')
+
+        # 'quote_dict' is raised by _get_quote_dict
 
     def _get_splitter(self):
         input_list = self.lineInput.text().strip(' 　').split(path_delimeter)
@@ -99,10 +152,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         if self.checkQuote.isChecked():
             check_quote = True
+            quote_dict = self._get_quote_dict()
         else:
             check_quote = False
-
-        quote_dict = self._get_quote_dict()
+            quote_dict = {}
 
         ts = TextSplitter(input_list=input_list,
                           output_path=output_path,
@@ -127,6 +180,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         try:
             ts = self._get_splitter()
             print(unicode(ts))  # debug use
+            self._check_empty(ts)
 
             # somehow you have to setMaximum
             # after the progress dialog is created.
@@ -140,25 +194,54 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             print("Start")
             ts.process(progress=dialogProgress, qapp=QtGui.QApplication)
 
-        except LookupError as e:
-            print("Error: {error}".format(error=e))  # debug use
+        except EmptyFieldError as e:
             dialogProgress.cancel()
+            print("EmptyFieldError: {error}".format(error=e))  # debug use
+
+            ErrorBox("空欄がありました。", self)
+
+            # t = e.etype
+            # if t == 'input_list':
+            #     ErrorBox("処理するテキストファイルを指定して下さい。", self)
+            # elif t == 'output_path':
+            #     ErrorBox("入力先のフォルダまたはファイルを指定して下さい。", self)
+            # elif t == 'input_enc':
+            #     ErrorBox("入力文字コードを指定して下さい。", self)
+            # elif t == 'output_enc':
+            #     ErrorBox("出力文字コードを指定して下さい。", self)
+            # elif t == 'delimiters':
+            #     ErrorBox("文区切文字を指定して下さい。", self)
+            # elif t == 'quote_dict':
+            #     ErrorBox("括弧を指定して下さい。", self)
+
+        except QuoteUnevenError as e:
+            dialogProgress.cancel()
+            print("QuoteUnevenError: {error}".format(error=e))  # debug use
+            ErrorBox(("括弧をペアとして入力してください。\n"
+                      "例：「」；『』"),
+                     self)
+
+        except LookupError as e:
+            dialogProgress.cancel()
+            print("LookupError: {error}".format(error=e))  # debug use
             ErrorBox("ご指定の文字コードは正しくないようです。", self)
 
         except UnicodeDecodeError as e:
-            print("Error: {error}".format(error=e))  # debug use
             dialogProgress.cancel()
+            print("UnicodeDecodeError: {error}".format(error=e))  # debug use
             ErrorBox("入力文字コードは正しくないようです。", self)
 
         except UnicodeEncodeError as e:
-            print("Error: {error}".format(error=e))  # debug use
             dialogProgress.cancel()
+            print("UnicodeEncodeError: {error}".format(error=e))  # debug use
             ErrorBox(("入力テキストをご指定の出力文字コードで"
                       "出力することができません。"),
                      self)
 
         except:
             dialogProgress.cancel()
+            print(sys.exc_info()[0], sys.exc_info()[1])
+
             ErrorBox("{} {}".format(sys.exc_info()[0],
                                     sys.exc_info()[1]),
                      self)
@@ -192,9 +275,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_btnBrowseInput_clicked(self):
         files = QtGui.QFileDialog.\
-                getOpenFileNames(parent=self,
-                                 caption="ファイルを開く",
-                                 filter=self._file_filter)
+            getOpenFileNames(parent=self,
+                             caption="ファイルを開く",
+                             filter=self._file_filter)
         if len(files) != 0:
             self.lineInput.setText(path_delimeter.join(files))
 

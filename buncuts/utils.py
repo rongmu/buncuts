@@ -32,10 +32,11 @@ def split_line(line,
     """Split a line into lines of sentences and return the resulted string."""
     result_list = []
     newline_preventers = delimiters | {'\n'}
-    qc = _QuoteChecker(quote_dict)
-
     line = line.rstrip('\n')
     length = len(line)
+
+    if check_quote:
+        qc = _QuoteChecker(quote_dict)
 
     for i, char in enumerate(line):
         # Always append original char to the result.
@@ -134,6 +135,7 @@ class TextSplitter(object):
         self._output_enc = output_enc
         self._output_newline = output_newline
         self._output_is_dir = output_is_dir
+
         if output_append:
             self._write_mode = 'a'
         else:
@@ -185,6 +187,19 @@ class TextSplitter(object):
                             quotes=quotes)
 
         return summary
+
+    def get_output_list(self):
+        if self._output_is_dir:
+            output_list = []
+            for file_path in self._input_list:
+                output_path = os.path.join(self._output_path,
+                                           os.path.basename(file_path))
+                output_list.append(output_path)
+
+            return output_list
+
+        else:
+            return [self._output_path]
 
     def _process_single_file(self, input_path, output_file):
         input_file = io.open(input_path,
