@@ -10,6 +10,8 @@ TODO
       (app.process) if `ts._output_is_dir`
       and files in `ts.get_output_list()` exist
       proceed after confirming overwrite, otherwise return.
+- [ ] Raise Error if input file doesn't exist.
+- [ ] Raise Error if output folder doesn't exist.
 - [x] Check empty
 - [x] raise error in `_get_quote_dict`: QuoteUnevenError
 
