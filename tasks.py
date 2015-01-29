@@ -15,6 +15,8 @@ ui_pkg = os.path.join(pkg_dir, 'ui')
 # PyInstaller
 exe_name = 'BunCuts'
 
+runtime_hook = os.path.join(base_path, 'rthook_pyqt4.py')
+
 app_file = os.path.join(base_path, 'app.pyw')
 app_icon = os.path.join(res_dir, os.path.normpath('img/app.ico'))
 
@@ -68,11 +70,16 @@ def app():
 @task
 def build():
     """build Windows executable with PyInstaller"""
-    run(('pyinstaller --noconsole '
+    run(('pyinstaller --runtime-hook="{rthook}" --noconsole '
          '--specpath="{spec}" --workpath="{work}" --distpath="{dist}" '
          '--name={name} --icon="{icon}" "{script}"').format(
-             spec=spec_path, work=work_path, dist=dist_path,
-             name=exe_name, icon=app_icon, script=app_file),
+             rthook=runtime_hook,
+             spec=spec_path,
+             work=work_path,
+             dist=dist_path,
+             name=exe_name,
+             icon=app_icon,
+             script=app_file),
         echo=True)
 
 

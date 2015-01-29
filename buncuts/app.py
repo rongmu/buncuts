@@ -9,7 +9,13 @@ import sys
 
 # select PyQt API v2
 import sip
-sip.setapi('QString', 2)
+sip.setapi(u'QDate', 2)
+sip.setapi(u'QDateTime', 2)
+sip.setapi(u'QString', 2)
+sip.setapi(u'QTextStream', 2)
+sip.setapi(u'QTime', 2)
+sip.setapi(u'QUrl', 2)
+sip.setapi(u'QVariant', 2)
 
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
