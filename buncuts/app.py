@@ -73,9 +73,12 @@ class AboutDialog(QtGui.QDialog, Ui_AboutDialog):
 
 class ProgressDialog(QtGui.QProgressDialog):
     def __init__(self, parent=None):
+        # if the file is not empty,
+        # then the actual counting will always start from 1.
+        # so it's okay to set minimum to 1.
         super(ProgressDialog, self).__init__("処理中",
                                              "キャンセル",
-                                             0,
+                                             1,
                                              0,
                                              parent)
         self.setWindowTitle("BunCuts")

@@ -1,8 +1,8 @@
 TODO
 ====
 
-- [ ] Progress stucks when input has only one or zero line.
 - [ ] _perhaps_ re-solve UI response problem via multi-threading?
+- [x] Progress stucks when input has only one or zero line.
 - [x] Solve the UI Blocking problem.
 
 ## Pre-process Checks
