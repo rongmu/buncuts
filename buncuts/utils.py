@@ -145,6 +145,8 @@ class TextSplitter(object):
         self._quote_dict = quote_dict
         self._check_quote = check_quote
 
+        self._total_lines = None
+
     def __unicode__(self):
         if self._output_newline is None:
             output_newline = "Same as input"
@@ -272,8 +274,12 @@ class TextSplitter(object):
             output_file.close()
 
     def total_lines(self):
-        num_lines = sum(1 for f in self._input_list for line in open(f))
-        return num_lines
+        if self._total_lines is None:
+            self._total_lines = sum(1
+                                    for f in self._input_list
+                                    for line in open(f))
+
+        return self._total_lines
 
     def process(self, progress=None, qapp=None):
         if progress is not None:

@@ -29,6 +29,11 @@ path_delimeter = ";"
 file_filter = "テキストファイル (*.txt);;すべてのファイル (*.*)"
 
 
+class InputEmptyError(Exception):
+    def __str__(self):
+        return "input file is empty"
+
+
 class QuoteUnevenError(Exception):
     def __str__(self):
         return "uneven quote pair"
@@ -188,9 +193,13 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             print(unicode(ts))  # debug use
             self._check_empty(ts)
 
+            lines = ts.total_lines()
+            if lines == 0:
+                raise InputEmptyError
+
             # somehow you have to setMaximum
             # after the progress dialog is created.
-            dialogProgress.setMaximum(ts.total_lines())
+            dialogProgress.setMaximum(lines)
             # ensure the dialog is displayed...
             # sometimes it won't show up without this.
             dialogProgress.forceShow()
@@ -199,6 +208,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
             print("Start")
             ts.process(progress=dialogProgress, qapp=QtGui.QApplication)
+
+        except InputEmptyError as e:
+            dialogProgress.cancel()
+            print("InputEmptyError: {error}".format(error=e))  # debug use
+
+            ErrorBox("入力ファイルが空です。", self)
 
         except EmptyFieldError as e:
             dialogProgress.cancel()
