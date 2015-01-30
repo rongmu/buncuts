@@ -30,7 +30,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>BunCuts - 文割</string>
+   <string>BunCuts - 文割 v0.9</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../app.qrc">
