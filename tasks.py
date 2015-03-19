@@ -35,17 +35,9 @@ ui_glob = os.path.join(res_dir, os.path.normpath('ui/*.ui'))
 
 
 @task
-def test():
-    """output test"""
-    run('echo hello invoke',
-        echo=True)
-
-
-@task
 def res():
     """compile resources to ui subpackage"""
-    run('pyrcc4 -py2 -o "{}" "{}"'.format(res_mod, res_qrc),
-        echo=True)
+    run('pyrcc4 -py2 -o "{}" "{}"'.format(res_mod, res_qrc))
 
 
 @task
@@ -56,15 +48,13 @@ def ui():
         ui_mod = os.path.join(ui_pkg, name_noext + '.py')
 
         run('pyuic4 --from-imports -o "{}" "{}"'.format(
-            ui_mod, ui_xml),
-            echo=True)
+            ui_mod, ui_xml))
 
 
 @task
 def app():
     """run the app"""
-    run('python {}'.format(app_file),
-        echo=True)
+    run('python {}'.format(app_file))
 
 
 @task
@@ -79,13 +69,11 @@ def build():
              dist=dist_path,
              name=exe_name,
              icon=app_icon,
-             script=app_file),
-        echo=True)
+             script=app_file))
 
 
 @task
 def clean():
     """clean the build files of PyInstaller"""
     for path in clean_paths:
-        run('rm -rf "{}"'.format(path),
-            echo=True)
+        run('rm -rf "{}"'.format(path))
