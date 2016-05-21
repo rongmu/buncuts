@@ -1,5 +1,5 @@
 # buncuts
-BunCuts - An One-sentence-per-line Text Formatter for Japanese.
+BunCuts - A One-sentence-per-line Text Formatter for Japanese.
 
 ![buncuts](http://i.imgur.com/fDnOEnD.jpg)
 
